@@ -1,12 +1,13 @@
 ---
 title: "Lab 1: Introduction to Quarto"
 author: "Dominic Wooldridge"
-date: "Insert the date here!"
+date: "1/9/2025"
 format: html
 editor: source
 embed-resources: true
-execute:
-  echo: false
+execute: 
+  echo: true
+  error: true
 ---
 
 # Part Two: Exploring Quarto Documents
@@ -23,14 +24,18 @@ provides descriptions on the options you can specify in a document's execution.
 options, (1) your source code is always output on the page, and (2) your
 document will render even if there are errors.
 
-## Running the Provided Code
+## Tooth Growth Dataset
 
 ```{r}
 #| eval: false
 #| echo: true
 #| label: practicing-running-code
 
-1 + 1
+# Load a dataset into the R Environment.
+data(ToothGrowth)
+
+# Look at the summary of the variables in the dataset.
+summary(ToothGrowth)
 ```
 
 **Question 3** -- Let's spice this code up a bit. Delete `1 + 1` from the code
@@ -59,8 +64,26 @@ section (e.g., Tooth Growth Dataset).
 ```{r}
 #| echo: true
 #| label: creating-a-plot
+#| fig-align: "center"
+#| fig-cap: "Comparison of teeth length by supplement type and dosage"
 
-plot(pressure)
+library(tidyverse)
+library(patchwork)
+
+
+Plot1 <- ggplot(data = ToothGrowth, 
+       mapping = aes(x = supp, y = len)) +
+  geom_boxplot() +
+  labs(x = "Supplement", y = "Length of Teeth (mm)")
+
+Plot2 <- ToothGrowth %>% 
+  mutate(dose = as.factor(dose)) %>% 
+  ggplot(mapping = aes(x = dose, y = len)) +
+  geom_boxplot() +
+  labs(x = "Dose of Supplement (mg/day)", y = "Length of Teeth (mm)")
+
+Plot1 + Plot2
+
 ```
 
 Now, run this code chunk! You should see two side-by-side boxplots, one plot
